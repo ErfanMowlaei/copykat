@@ -37,7 +37,16 @@ start_time <- Sys.time()
 
   print("step1: read and filter data ...")
   print(paste(nrow(rawmat), " genes, ", ncol(rawmat), " cells in raw data", sep=""))
-
+  
+  # Check for invalid values in the matrix
+  if (any(is.nan(rawdata))) {
+     stop("Error: The input matrix contains NaN values.")
+  }
+	
+  if (any(rawdata < 0, na.rm = TRUE)) {
+     stop("Error: The input matrix contains negative values.")
+  }
+	
   genes.raw <- apply(rawmat, 2, function(x)(sum(x>0)))
 
   if(sum(genes.raw> min.gene.per.cell)==0) stop("none cells have more than min.gene.per.cell")
